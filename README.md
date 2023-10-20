@@ -22,6 +22,33 @@ and its subproblem (KLNMF subproblem)
 
 We provide python tutorials in `notebooks` as this is one of the most frequently used languages in Machine Learning
 
+The original simulations and experiments are based on Julia programming language.
+
+Even though random seeds are different, we can easily reproduce similar results
+
+(e.g. qualitatively having the same take-away messages, or similar conclusion in relative comparison)
+
+with other languagues such as Python3.
+
+
+#### WT like real data example (python3)
+
+https://github.com/youngseok-kim/SCIPI-JMLR/tree/main/notebooks/klnmf_real_world_dense_example.ipynb
+
+#### KOS like real data example (python3)
+
+https://github.com/youngseok-kim/SCIPI-JMLR/tree/main/notebooks/klnmf_real_world_sparse_example.ipynb
+
+#### Synthetic data examples (python3)
+
+https://github.com/youngseok-kim/SCIPI-JMLR/tree/main/notebooks/klnmf_large_synthetic.ipynb
+
+https://github.com/youngseok-kim/SCIPI-JMLR/tree/main/notebooks/klnmf_large_synthetic.ipynb
+
+#### Julia codes
+
+https://github.com/youngseok-kim/SCIPI-JMLR/tree/main/julia
+
 ### Data
 
 For KL-NMF, we downloaded the data from

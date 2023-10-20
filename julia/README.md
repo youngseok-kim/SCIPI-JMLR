@@ -1,4 +1,4 @@
-# Julia 0.9 codes to reproduce results in the paper
+# Julia codes to reproduce results in the paper
 
 ## Introduction
 

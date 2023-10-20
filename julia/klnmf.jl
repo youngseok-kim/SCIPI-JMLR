@@ -44,6 +44,27 @@ function KLNMF_EM(V, k; seed = 1, iter = 1000)
     return W, H, A, obj1
 end
 
+function KLNMF_SCIPI(V, k; seed = 1, iter = 1000, b = 0)
+    Random.seed!(1);
+    W, H, A = init_sparse(V,k,ind, seed);
+    obj1    = zeros(iter);
+    a       = 1000 * log(k) - 999;
+    for i = 1:iter
+        if i == 1
+        else
+            H       = H .* (b .+ W' * A).^2;
+            H       = H ./ sum(H .+ e, dims = 2);
+            A[ind]  = V.nzval ./ (W * H)[ind];
+            W       = W .* (b .+ A * H').^2;
+            W       = W ./ sum(W .+ e, dims = 1);
+            A[ind]  = V.nzval ./ (W * H)[ind];
+        end
+        obj1[i] = a + dot(V.nzval, log.(A[ind]));
+        print(i, " ");
+    end
+    return W, H, A, obj1
+end
+
 function KLNMF_SCIPI1(V, k; seed = 1, iter = 1000, b = 1)
     Random.seed!(1);
     W, H, A = init_sparse(V,k,ind, seed);
@@ -132,7 +153,7 @@ CSV.write("kos_fullres2.txt", DataFrame(out1), delim = ',')
 out1 = zeros(10,2700)
 for i = 1:10
     @time oo1 = KLNMF_EM(V, 20; seed = 2010 + i, iter = 800);
-    @time oo2 = KLNMF_SCIPI1(V, 20; seed = 2010 + i, iter = 800);
+    @time oo2 = KLNMF_SCIPI(V, 20; seed = 2010 + i, iter = 800);
     @time oo3 = KLNMF_PGD(V, 20; seed = 2010 + i, iter = 800);
     @time oo4 = KLNMF_SCIPI_INNER(V, 20; seed = 2010 + i, iter = 300);
     out1[i,:]  = [oo1[4];oo2[4];oo3[4];oo4[4]]
@@ -148,7 +169,7 @@ V = V / sum(V) * 1e3;
 out2 = zeros(10,3 * 1700)
 for i = 1:10
     @time oo1 = KLNMF_EM(V, 20; seed = 2010 + i, iter = 500);
-    @time oo2 = KLNMF_SCIPI1(V, 20; seed = 2010 + i, iter = 500);
+    @time oo2 = KLNMF_SCIPI(V, 20; seed = 2010 + i, iter = 500);
     @time oo3 = KLNMF_PGD(V, 20; seed = 2010 + i, iter = 500);
     @time oo4 = KLNMF_SCIPI_INNER(V, 20; seed = 2010 + i, iter = 200);
     out2[i,:]  = [oo1[4];oo2[4];oo3[4];oo4[4]]
@@ -170,7 +191,7 @@ V = V / sum(V) * 1e3;
 out3 = zeros(10,3 * 1700)
 for i = 1:10
     @time oo1 = KLNMF_EM(V, 20; seed = 2010 + i, iter = 500);
-    @time oo2 = KLNMF_SCIPI1(V, 20; seed = 2010 + i, iter = 500);
+    @time oo2 = KLNMF_SCIPI(V, 20; seed = 2010 + i, iter = 500);
     @time oo3 = KLNMF_PGD(V, 20; seed = 2010 + i, iter = 500);
     @time oo4 = KLNMF_SCIPI_INNER(V, 20; seed = 2010 + i, iter = 200);
     out3[i,:]  = [oo1[4];oo2[4];oo3[4];oo4[4]]
@@ -193,7 +214,7 @@ V = V / sum(V) * 1e3;
 out4 = zeros(10, 2700)
 for i = 1:10
     @time oo1 = KLNMF_EM(V, 20; seed = 2010 + i, iter = 800);
-    @time oo2 = KLNMF_SCIPI1(V, 20; seed = 2010 + i, b = 1, iter = 800);
+    @time oo2 = KLNMF_SCIPI(V, 20; seed = 2010 + i, b = 1, iter = 800);
     @time oo3 = KLNMF_PGD(V, 20; seed = 2010 + i, iter = 800);
     @time oo4 = KLNMF_SCIPI_INNER(V, 20; seed = 2010 + i, iter = 300);
     out4[i,:]  = [oo1[4];oo2[4];oo3[4];oo4[4]]
